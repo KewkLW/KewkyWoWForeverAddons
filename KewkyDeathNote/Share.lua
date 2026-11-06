@@ -98,8 +98,9 @@ local function NewPinFrame()
         local p = self.pin
         if not p then return end
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText(p.name, 1, 0.3, 0.2)
-        GameTooltip:AddLine(p.what, 1, 1, 1)
+        local c = p.class and RAID_CLASS_COLORS and RAID_CLASS_COLORS[p.class]
+        GameTooltip:SetText(p.name, c and c.r or 1, c and c.g or 0.3, c and c.b or 0.2)
+        GameTooltip:AddLine((p.faction or "") .. "  ·  " .. p.what, 1, 1, 1)
         GameTooltip:AddLine(string.format("Seen %s by %s", date("%H:%M:%S", p.t), p.by), 0.8, 0.8, 0.8)
         GameTooltip:Show()
     end)
@@ -137,11 +138,11 @@ local function UpdatePins()
     end
 end
 
-local function AddPin(guid, mapID, x, y, t, name, what, by)
+local function AddPin(guid, mapID, x, y, t, name, what, by, faction, class)
     local ok, cont, world = pcall(C_Map.GetWorldPosFromMapPos, mapID, CreateVector2D(x, y))
     if not ok or not cont then return end
     local p = pins[guid] or {}
-    p.cont, p.world, p.t, p.name, p.what, p.by = cont, world, t, name, what, by
+    p.cont, p.world, p.t, p.name, p.what, p.by, p.faction, p.class = cont, world, t, name, what, by, faction, class
     p.short = name:match("^(%S+)") or name
     p.frame = p.frame or NewPinFrame()
     if p.frame then p.frame.pin = p end
@@ -157,7 +158,7 @@ ns.ShareSighting = function(s)
     local map, x, y = MyPosition()
     if not map then return end
     local by = UnitName("player")
-    AddPin(s.guid, map, x, y, time(), s.name, s.what, by)
+    AddPin(s.guid, map, x, y, time(), s.name, s.what, by, s.faction, s.class)
     local msg = table.concat({ "S", map, math.floor(x * 10000), math.floor(y * 10000), time(), s.guid,
         s.faction, s.level, s.class or "", s.race or "", s.name }, SEP)
     queue[#queue + 1] = { msg = msg:sub(1, 255), t = time() }
@@ -187,7 +188,7 @@ local function OnMessage(text, sender)
     if classLocal ~= "" then parts[#parts + 1] = classLocal end
     local what = table.concat(parts, " ")
     local by = Ambiguate(sender or "?", "short")
-    AddPin(guid, map, x / 10000, y / 10000, t, name, what, by)
+    AddPin(guid, map, x / 10000, y / 10000, t, name, what, by, faction, class ~= "" and class or nil)
     if ns.ShowSighting then ns.ShowSighting(guid, name, what, faction, by, t, map, x / 100, y / 100) end
 end
 
