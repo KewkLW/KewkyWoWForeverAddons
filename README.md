@@ -9,6 +9,8 @@ Small addons for World of Warcraft: Forever.
 | [KewkyFriends](KewkyFriends) | Shows each Battle.net friend's ruleset and faction, and whether you can group with them | [KewkyFriends.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyFriends.zip) |
 | [KewkyChatTarget](KewkyChatTarget) | Adds Target to the right-click menu on player names in chat | [KewkyChatTarget.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyChatTarget.zip) |
 
+![KewkyQuest's Quest Info tab and arrow in game](docs/kewkyquest.jpg)
+
 All of them in one zip: **[KewkyWoWForeverAddons.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyWoWForeverAddons.zip)**
 
 ## Install

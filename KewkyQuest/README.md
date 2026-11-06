@@ -3,6 +3,8 @@
 Quest helper for WoW Forever: a route through nearby quests, a navigation arrow that follows your
 tracked quest, a sparkle on quest objects, and a Quest Info tab on the Map & Quest Log.
 
+![KewkyQuest: the Quest Info tab beside the Map & Quest Log, and the arrow pointing to the next objective](../docs/kewkyquest.jpg)
+
 - **Arrow:** click a quest in the objective tracker (or `/kq route`) and an arrow at the top of the screen
   points the way with the distance and a clock direction. It follows each step: the nearest open
   objective spot, the game's own map marker when the next step isn't in the database, then the turn-in.
