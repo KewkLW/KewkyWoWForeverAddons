@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: KewkyConsole
+## Notes: Run Lua in game and see the result: /kc, or paste code into the console window
+## Author: Kewk
+## Version: dev
+## SavedVariables: KewkyConsoleDB
+## Category: Development Tools
+KewkyConsole.lua

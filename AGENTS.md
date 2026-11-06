@@ -75,3 +75,11 @@ from wowforever-waypoint-tracker, MIT; notices in THIRD-PARTY-LICENSES.txt, whic
   retries on PLAYER_REGEN_ENABLED. Receivers accept only their own zone (map walked up to Zone type), dedupe per GUID for
   60 s, and draw pins as their own frames on WorldMapFrame.ScrollContainer.Child (projected through world coords),
   fading over 60 s. Mock: /tmp/kcttest/share.lua (send, then recv with the payload).
+
+## KewkyConsole
+
+Lua console: `/kc <lua>` (expression first via "return ...", then statements), window with code box and
+ScrollingMessageFrame output, `print` redirected through a setfenv env (`__index`/`__newindex` = _G),
+`/kc+`/`/kc!` buffer, log in `KewkyConsoleDB.log`. Bindings.xml is auto-loaded on Forever (not in the TOC).
+Agent bridge (Kewk's machine only): wow-tracker `tools/wowrun "<lua>"` types `/kc ...` into the WoW window via
+omarchy-agent-desktop and screenshots it. Only when Kewk asks: the keys land in his live game.
