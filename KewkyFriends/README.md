@@ -13,7 +13,7 @@ when you invite them. KewkyFriends shows:
 - **Right-click menu:** the same ruleset and can-group lines.
 - **`/kfr`:** prints every online Battle.net friend's character, server, faction and race in chat.
 
-The ruleset is read from the last word of the server name ("CAMWOW US2 Realm 5 PvE" is Normal).
+The ruleset is read from the ruleset word in the server name ("PvP-US" is PvP, "CAMWOW US2 Realm 5 PvE" is Normal).
 
 ## Install
 

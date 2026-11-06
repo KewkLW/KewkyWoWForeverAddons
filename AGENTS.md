@@ -21,7 +21,7 @@ addon; the folder name, its `.toc` and its `_Camelot.toc` must all match.
 
 KewkyFriends is a WoW Forever (Interface 16001, modern `C_` APIs) addon that shows each Battle.net
 friend's ruleset and faction. Grouping on Forever needs the same region, ruleset and faction; the
-ruleset is the last word of the friend's `gameAccountInfo.realmName`.
+ruleset is the ruleset word (PvE/Normal, PvP, RP, RP-PvP) in the friend's `gameAccountInfo.realmName`; Forever names look like "PvP-US" (combat log: First-Surname-PvP-US).
 
 - Forever uses the mainline card-style friends list (`FriendsListSocialCardMixin`, inside
   `SocialUIFrame.FriendsList.ScrollBox`). Hook it with `ScrollUtil.AddInitializedFrameCallback` and

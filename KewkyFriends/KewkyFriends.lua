@@ -19,12 +19,17 @@ local function Print(msg)
     DEFAULT_CHAT_FRAME:AddMessage("|cff66ccffKewkyFriends|r " .. msg)
 end
 
--- "Normal"/"PvP"/... from a server name, nil when the last word isn't a known ruleset
+-- "Normal"/"PvP"/... from a server name: the last ruleset word in it, wherever it sits
+-- ("CAMWOW US2 Realm 5 PvE", "PvP-US", "RP-PvP"). nil when there is none.
 local function RulesetOf(realm)
     if not realm or realm == "" then return nil end
-    local last = realm:match("(%a[%a%-]*)%s*$") or realm
-    return RULESETS[last:lower():gsub("%-", "")]
-        or RULESETS[(realm:match("(%a+)$") or ""):lower()]
+    local words = {}
+    for w in realm:gmatch("%a+") do words[#words + 1] = w:lower() end
+    for i = #words, 1, -1 do
+        if i > 1 and RULESETS[words[i - 1] .. words[i]] then return RULESETS[words[i - 1] .. words[i]] end
+        if RULESETS[words[i]] then return RULESETS[words[i]] end
+    end
+    return nil
 end
 
 local function MyRealm()
