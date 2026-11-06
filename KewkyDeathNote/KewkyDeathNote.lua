@@ -1,4 +1,4 @@
-local ADDON_NAME = ...
+local ADDON_NAME, ns = ...
 
 -- Death Note: every enemy player who killed you, and every player you killed or helped kill,
 -- with their level and yours at the time. A red glow and the K/D go on your target frame
@@ -544,6 +544,8 @@ SlashCmdList.KEWKYDEATHNOTE = function(msg)
     if msg == "debug" then
         KewkyDeathNoteDB.debug = not KewkyDeathNoteDB.debug
         Print("debug " .. (KewkyDeathNoteDB.debug and "on" or "off"))
+    elseif msg == "alert" then
+        if ns.ToggleAlert then ns.ToggleAlert() end
     elseif msg == "reset yes" then
         db.players = {}
         RefreshUI()

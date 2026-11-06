@@ -6,3 +6,4 @@
 ## SavedVariables: KewkyDeathNoteDB
 ## Category: PvP
 KewkyDeathNote.lua
+Alert.lua

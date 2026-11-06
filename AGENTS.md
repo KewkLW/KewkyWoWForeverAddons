@@ -55,6 +55,7 @@ Per-character PvP note (`KewkyDeathNoteDB.chars[playerGUID].players[enemyGUID]` 
 - The meter's `unitName` meaning (target of your damage) and whether `PARTY_KILL` fires for solo kills
   are unconfirmed in game; `/kdn debug` prints both.
 - The target glow is its own frame anchored to `TargetFrame`; nothing is written into `TargetFrame`.
+- Alert.lua: other-faction players from NAME_PLATE_UNIT_ADDED / target / mouseover (`UnitFactionGroup` isn't secret), 2 min per-player repeat, off in pvp/arena instances; sets nameplateShowEnemies/nameplateShowAll (saved in `KewkyDeathNoteDB.alertSaved`, restored by `/kdn alert`). Toggle shared via the addon namespace (`ns.ToggleAlert`).
 
 ## KewkyQuest
 
