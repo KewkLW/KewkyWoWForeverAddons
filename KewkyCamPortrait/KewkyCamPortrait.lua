@@ -22,10 +22,31 @@ local function LevelParts()
     return PlayerLevelText, main and main.LevelBackgroundCircle
 end
 
+-- Key fill: solid magenta in the portrait circle, under the ring. OBS keys the color out of the
+-- game capture (Color Key filter) and the cam source placed below the game shows through, so
+-- the ring draws over the cam. Our own texture on the container, masked by Blizzard's portrait
+-- mask; nothing is stored on the Blizzard frame.
+local keyFill
+local function KeyFill(portrait)
+    if not keyFill then
+        keyFill = portrait:GetParent():CreateTexture(nil, "BACKGROUND", nil, 1)
+        keyFill:SetAllPoints(portrait)
+        keyFill:SetColorTexture(1, 0, 1)
+        local mask = PlayerFrame.PlayerFrameContainer.PlayerPortraitMask
+        if mask then keyFill:AddMaskTexture(mask) end
+    end
+    return keyFill
+end
+
 local function Apply()
     local portrait = Portrait()
     if not portrait then return end
     portrait:SetAlpha(db.hidePortrait and 0 or 1)
+    if db.keyFill and db.hidePortrait then
+        KeyFill(portrait):Show()
+    elseif keyFill then
+        keyFill:Hide()
+    end
     local text, circle = LevelParts()
     local levelAlpha = db.hideLevel and 0 or 1
     if text then text:SetAlpha(levelAlpha) end
@@ -59,6 +80,7 @@ f:SetScript("OnEvent", function(_, event, arg)
         db = KewkyCamPortraitDB
         if db.hidePortrait == nil then db.hidePortrait = true end
         if db.hideLevel == nil then db.hideLevel = false end
+        if db.keyFill == nil then db.keyFill = false end
         return
     end
     if not db then return end
@@ -75,11 +97,14 @@ SlashCmdList.KEWKYCAMPORTRAIT = function(msg)
     elseif msg == "level" then
         db.hideLevel = not db.hideLevel
         Print("level badge " .. (db.hideLevel and "hidden" or "shown"))
+    elseif msg == "key" then
+        db.keyFill = not db.keyFill
+        Print("magenta key fill " .. (db.keyFill and "on (OBS Color Key, Custom #FF00FF)" or "off"))
     elseif msg == "where" then
         Where()
         return
     else
-        Print("/kcp: toggle portrait, /kcp level: toggle level badge, /kcp where: portrait pixel position for OBS")
+        Print("/kcp: toggle portrait, /kcp level: toggle level badge, /kcp key: magenta fill for an OBS cam behind the ring, /kcp where: portrait pixel position for OBS")
         return
     end
     Apply()
