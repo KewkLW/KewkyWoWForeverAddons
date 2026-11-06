@@ -1108,6 +1108,19 @@ local function BuildPanel()
     scanBtn:SetSize(80, 22)
     scanBtn:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 6, 6)
     scanBtn:SetText("Refresh")
+
+    -- map option: "?" pins only for quests ready to turn in (default on)
+    local readyBox = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+    readyBox:SetSize(22, 22)
+    readyBox:SetPoint("LEFT", scanBtn, "RIGHT", 6, 0)
+    local readyText = readyBox:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    readyText:SetPoint("LEFT", readyBox, "RIGHT", 0, 1)
+    readyText:SetText("Map: ready turn-ins only")
+    readyBox:SetScript("OnShow", function(self) self:SetChecked(KewkyQuestSV.readyTurninsOnly ~= false) end)
+    readyBox:SetScript("OnClick", function(self)
+        KewkyQuestSV.readyTurninsOnly = self:GetChecked() and true or false
+        UpdateMapPins()
+    end)
     scanBtn:SetScript("OnClick", function()
         RefreshPanel()
     end)
@@ -1285,7 +1298,8 @@ UpdateMapPins = function()
 
     for i, entry in ipairs(quests) do
         if entry.status == "inlog" then
-            if entry.finisher then
+            -- turn-in pins only for quests ready to hand in, unless the option says otherwise
+            if entry.finisher and (entry.ready or KewkyQuestSV.readyTurninsOnly == false or routing) then
                 pinIdx, pin = PlacePin(canvas, pinIdx, entry, entry.finisher, viewMap, "QuestTurnin", 24)
                 if pin and not entry.ready then
                     pin.icon:SetDesaturated(true)
@@ -1476,6 +1490,11 @@ SlashCmdList["KEWKYQUEST"] = function(msg)
         local label = (name ~= "" and name or "Waypoint") .. " (" .. ZoneName(zone) .. " " .. x .. ", " .. y .. ")"
         followRoute, followIdx = nil, nil
         SetArrow({ name = label, zone = zone, x = x, y = y }, label)
+
+    elseif msg == "turnins" then
+        KewkyQuestSV.readyTurninsOnly = KewkyQuestSV.readyTurninsOnly == false
+        print("|cff55ccffKewkyQuest|r: map shows " .. (KewkyQuestSV.readyTurninsOnly and "only turn-ins that are ready" or "turn-ins for every quest in your log"))
+        UpdateMapPins()
 
     elseif msg == "why" then
         ExplainTarget()

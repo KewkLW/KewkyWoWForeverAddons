@@ -17,6 +17,8 @@ tracked quest, a sparkle on quest objects, and a Quest Info tab on the Map & Que
   branches, chests), a gold sparkle plays on it. This turns on the game's soft-interact targeting
   (nearest object around you, 20 yd); `/kq sparkle` turns it off and restores your settings.
 - `/kq way [zone] x y [name]` puts a pin on the map and points the arrow at it (`/kq way Orgrimmar 81.5 19.6 Hanashi`).
+- Map pins: `?` turn-in pins show only for quests ready to hand in (the "Map: ready turn-ins only" box in
+  the `/kq` panel, or `/kq turnins`, shows them for every quest in your log).
 - `/kq why` explains where the arrow is pointing and why; `/kq done` lists completed quests.
 
 The quest data is the Classic quest database, and Forever has changed and added quests, so some NPCs
