@@ -3,7 +3,8 @@ local ADDON_NAME, ns = ...
 -- Enemy alert: a sound and a banner when a player of the other faction shows up near you.
 -- Addons only see players the game has loaded around you: enemy nameplates (about 40-60 yd), your
 -- target and mouseover. Someone in your Death Note gets the loud raid-warning sound and a red banner.
--- Off in battlegrounds and arenas. /kdn alert turns it on or off.
+-- Off in battlegrounds and arenas. /kdn alert turns it on or off; sounds are a separate option, off by
+-- default (/kdn sound, or the checkboxes in the /kdn window).
 
 local REPEAT_AFTER = 120       -- s before the same player alerts again
 local SOUND_GAP = 3            -- s between sounds when several show up at once
@@ -89,9 +90,17 @@ local function Show(title, sub, r, g, b)
     banner.fade:Play()
 end
 
+local function SoundOn()
+    return KewkyDeathNoteDB.alertSound == true
+end
+
 local function Sound(key)
+    if not SoundOn() or GetTime() - lastSound < SOUND_GAP then return end
     local id = SOUNDKIT and (SOUNDKIT[key] or SOUNDKIT.RAID_WARNING)
-    if id then PlaySound(id, "Master") end
+    if id then
+        PlaySound(id, "Master")
+        lastSound = GetTime()
+    end
 end
 
 local function Check(unit)
@@ -117,20 +126,22 @@ local function Check(unit)
     local classLocal, class = UnitClass(unit)
     local color = class and RAID_CLASS_COLORS and RAID_CLASS_COLORS[class]
     local cname = color and ("|c" .. color.colorStr .. name .. "|r") or name
-    local what = string.format("%s %s %s", level, Readable(race) and race or "", Readable(classLocal) and classLocal or "")
+    local parts = { level }
+    if Readable(race) and race ~= "" then parts[#parts + 1] = race end
+    if Readable(classLocal) and classLocal ~= "" then parts[#parts + 1] = classLocal end
+    local what = table.concat(parts, " ")
 
     local note = NoteEntry(guid)
     if note then
         local k, d = #note.kills, #note.deaths
         Show("DEATH NOTE: " .. name, string.format("%s  ·  you %d, them %d", what, k, d), 1, 0.15, 0.15)
-        if now - lastSound > SOUND_GAP then Sound("RAID_WARNING") end
+        Sound("RAID_WARNING")
         DEFAULT_CHAT_FRAME:AddMessage(string.format("|cffcc3333Death Note|r %s (%s) is near you. You %d, them %d.", cname, what, k, d))
     else
         Show(faction .. " nearby: " .. name, what, 1, 0.55, 0.1)
-        if now - lastSound > SOUND_GAP then Sound("UI_RAID_BOSS_WHISPER_WARNING") end
+        Sound("UI_RAID_BOSS_WHISPER_WARNING")
         DEFAULT_CHAT_FRAME:AddMessage(string.format("|cffcc3333Death Note|r %s nearby: %s (%s)", faction, cname, what))
     end
-    lastSound = now
 end
 
 local f = CreateFrame("Frame")
@@ -151,7 +162,14 @@ f:SetScript("OnEvent", function(_, event, unit)
     end
 end)
 
--- /kdn alert, from KewkyDeathNote's slash command
+-- options, for KewkyDeathNote's /kdn command and window checkboxes
+ns.AlertOn, ns.SoundOn = Enabled, SoundOn
+
+ns.ToggleSound = function()
+    KewkyDeathNoteDB.alertSound = not SoundOn()
+    DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333Death Note|r alert sound " .. (SoundOn() and "on" or "off"))
+end
+
 ns.ToggleAlert = function()
     KewkyDeathNoteDB.alert = not Enabled()
     SetCVars(Enabled())

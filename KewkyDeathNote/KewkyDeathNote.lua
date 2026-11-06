@@ -420,8 +420,25 @@ local function BuildFrame()
     frame.summary = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.summary:SetPoint("TOPLEFT", 14, -32)
 
+    -- options: enemy alert banner, and its sound (off by default)
+    local function Check(label, x, get, toggle)
+        local cb = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+        cb:SetSize(22, 22)
+        cb:SetPoint("TOPLEFT", x, -48)
+        local text = cb:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+        text:SetPoint("LEFT", cb, "RIGHT", 0, 1)
+        text:SetText(label)
+        cb:SetScript("OnShow", function(self) self:SetChecked(get()) end)
+        cb:SetScript("OnClick", function(self) toggle() self:SetChecked(get()) end)
+        return cb
+    end
+    if ns.ToggleAlert then
+        frame.alertBox = Check("Enemy alert", 10, ns.AlertOn, ns.ToggleAlert)
+        frame.soundBox = Check("Alert sound", 120, ns.SoundOn, ns.ToggleSound)
+    end
+
     frame.scroll = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
-    frame.scroll:SetPoint("TOPLEFT", 10, -52)
+    frame.scroll:SetPoint("TOPLEFT", 10, -74)
     frame.scroll:SetPoint("BOTTOMRIGHT", -30, 10)
     frame.content = CreateFrame("Frame", nil, frame.scroll)
     frame.content:SetSize(1, 1)
@@ -546,6 +563,8 @@ SlashCmdList.KEWKYDEATHNOTE = function(msg)
         Print("debug " .. (KewkyDeathNoteDB.debug and "on" or "off"))
     elseif msg == "alert" then
         if ns.ToggleAlert then ns.ToggleAlert() end
+    elseif msg == "sound" then
+        if ns.ToggleSound then ns.ToggleSound() end
     elseif msg == "reset yes" then
         db.players = {}
         RefreshUI()
