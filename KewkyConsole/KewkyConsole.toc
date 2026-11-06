@@ -6,3 +6,4 @@
 ## SavedVariables: KewkyConsoleDB
 ## Category: Development Tools
 KewkyConsole.lua
+Claude.lua
