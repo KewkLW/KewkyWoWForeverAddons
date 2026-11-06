@@ -33,15 +33,9 @@ local function Log(who, text)
     while #c.log > MAX_LOG do table.remove(c.log, 1) end
 end
 
+-- the conversation is drawn by the overlay on the PC; in game only problems are reported, in chat
 local function Add(who, text)
-    if not win then return end
-    if who == "Claude" then
-        win.out:AddMessage("|cffd97757Claude:|r " .. text, 1, 1, 1)
-    elseif who == "you" then
-        win.out:AddMessage("|cff8fb8ffYou:|r " .. text, 0.85, 0.85, 0.85)
-    else
-        win.out:AddMessage(text, 0.6, 0.6, 0.6)
-    end
+    if who == nil then DEFAULT_CHAT_FRAME:AddMessage("|cffd97757Claude|r " .. text) end
 end
 
 -- ── channel and chat log ──
@@ -90,57 +84,54 @@ end
 
 -- ── window ──
 
-local function Build()
-    win = CreateFrame("Frame", "KewkyClaudeFrame", UIParent, "BasicFrameTemplateWithInset")
-    win:SetSize(460, 320)
-    win:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 30, 260)
-    win:SetFrameStrata("MEDIUM")
-    win:SetClampedToScreen(true)
-    win:SetMovable(true)
-    win:SetResizable(true)
-    win:EnableMouse(true)
-    win:RegisterForDrag("LeftButton")
-    win:SetScript("OnDragStart", win.StartMoving)
-    win:SetScript("OnDragStop", win.StopMovingOrSizing)
-    local title = win.TitleText or win:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    title:SetText("Claude")
-    if not win.TitleText then title:SetPoint("TOP", 0, -5) end
+-- the input bar sits where the Claude overlay (wow/claude_overlay.py BAR_X / BAR_TOP / BAR_W) draws the
+-- conversation just above it, as fractions of the game window, so the two read as one chat window
+local BAR_X, BAR_TOP, BAR_W = 0.015, 0.66, 0.24
 
-    local input = CreateFrame("EditBox", nil, win, "InputBoxTemplate")
-    input:SetHeight(22)
-    input:SetPoint("BOTTOMLEFT", 16, 10)
-    input:SetPoint("BOTTOMRIGHT", -12, 10)
+local function Place()
+    local w, h = UIParent:GetWidth(), UIParent:GetHeight()
+    win:ClearAllPoints()
+    win:SetPoint("TOPLEFT", UIParent, "TOPLEFT", BAR_X * w, -BAR_TOP * h)
+    win:SetWidth(BAR_W * w)
+end
+
+local function Build()
+    win = CreateFrame("Frame", "KewkyClaudeFrame", UIParent, "BackdropTemplate")
+    win:SetHeight(30)
+    win:SetFrameStrata("MEDIUM")
+    win:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = 1 })
+    win:SetBackdropColor(0.04, 0.03, 0.02, 0.85)
+    win:SetBackdropBorderColor(0.85, 0.47, 0.34, 0.9)
+    Place()
+    win:RegisterEvent("UI_SCALE_CHANGED")
+    win:RegisterEvent("DISPLAY_SIZE_CHANGED")
+    win:SetScript("OnEvent", Place)
+
+    local tag = win:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    tag:SetPoint("LEFT", 8, 0)
+    tag:SetText("|cffd97757Claude|r")
+
+    local input = CreateFrame("EditBox", nil, win)
+    input:SetPoint("LEFT", tag, "RIGHT", 8, 0)
+    input:SetPoint("RIGHT", -8, 0)
+    input:SetHeight(24)
+    input:SetFontObject(ChatFontNormal)
     input:SetAutoFocus(false)
     input:SetMaxLetters(1000)
+    local hint = input:CreateFontString(nil, "OVERLAY", "GameFontDisable")
+    hint:SetPoint("LEFT", 2, 0)
+    hint:SetText("Ask Claude... (click, type, Enter)")
+    input:SetScript("OnTextChanged", function(self) hint:SetShown(self:GetText() == "") end)
     input:SetScript("OnEnterPressed", function(self)
         Send(self:GetText())
         self:SetText("")
-        self:ClearFocus()            -- nothing keeps focus while you wait, so the reply can come in
+        self:ClearFocus()
     end)
     input:SetScript("OnEscapePressed", input.ClearFocus)
+    win:EnableMouse(true)
+    win:SetScript("OnMouseDown", function() input:SetFocus() end)
     win.input = input
 
-    local out = CreateFrame("ScrollingMessageFrame", nil, win)
-    out:SetPoint("TOPLEFT", 12, -28)
-    out:SetPoint("BOTTOMRIGHT", input, "TOPRIGHT", 0, 6)
-    out:SetFontObject(ChatFontNormal)
-    out:SetJustifyH("LEFT")
-    out:SetMaxLines(500)
-    out:SetFading(false)
-    out:SetInsertMode("BOTTOM")
-    out:EnableMouseWheel(true)
-    out:SetScript("OnMouseWheel", function(self, delta)
-        if delta > 0 then self:ScrollUp() else self:ScrollDown() end
-    end)
-    win.out = out
-
-    for _, e in ipairs(DB().log) do
-        if e.who == "Claude" then
-            out:AddMessage("|cffd97757Claude:|r " .. e.text, 0.8, 0.8, 0.8)
-        else
-            out:AddMessage("|cff8fb8ffYou:|r " .. e.text, 0.7, 0.7, 0.7)
-        end
-    end
     if KewkyConsoleDB.claudeShown == false then win:Hide() end
     win:SetScript("OnShow", function() KewkyConsoleDB.claudeShown = true end)
     win:SetScript("OnHide", function() KewkyConsoleDB.claudeShown = false end)
