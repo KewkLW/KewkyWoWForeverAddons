@@ -997,6 +997,7 @@ local function CreateQuestRow(parent, index)
     row:SetScript("OnClick", function(self)
         TrackEntry(self.entry)
         UpdateMapPins()
+        if ns.ShowQuestInfo and self.entry then ns.ShowQuestInfo(self.entry.questID) end
     end)
 
     row:SetScript("OnEnter", function(self)
@@ -1232,6 +1233,7 @@ local function GetOrCreatePin(parent, index)
 
     pin:SetScript("OnClick", function(self)
         TrackEntry(self.entry)
+        if ns.ShowQuestInfo and self.entry then ns.ShowQuestInfo(self.entry.questID) end
     end)
 
     pinPool[index] = pin

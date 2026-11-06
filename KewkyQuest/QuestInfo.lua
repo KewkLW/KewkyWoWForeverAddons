@@ -20,9 +20,12 @@ local PANEL_W = 300
 
 -- ── which quest ──
 
+local pickedQuest          -- last quest clicked on a KewkyQuest map pin or route row
+
 local function DetailQuestID()
     local id = QuestMapFrame_GetDetailQuestID and QuestMapFrame_GetDetailQuestID()
     if id and id > 0 then return id end
+    if pickedQuest then return pickedQuest end
     id = C_SuperTrack and C_SuperTrack.GetSuperTrackedQuestID and C_SuperTrack.GetSuperTrackedQuestID()
     if id and id > 0 then return id end
     return nil
@@ -307,8 +310,20 @@ local function BuildTab()
     if KewkyQuestSV.infoOpen ~= false then panel:Show() end
 
     -- follow the quest the log shows
-    if QuestMapFrame_ShowQuestDetails then hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() C_Timer.After(0, Render) end) end
+    if QuestMapFrame_ShowQuestDetails then
+        hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() pickedQuest = nil C_Timer.After(0, Render) end)
+    end
     if QuestMapFrame_CloseQuestDetails then hooksecurefunc("QuestMapFrame_CloseQuestDetails", function() C_Timer.After(0, Render) end) end
+end
+
+-- a KewkyQuest map pin or route row was clicked: show that quest, picked up or not
+ns.ShowQuestInfo = function(questID)
+    if not questID then return end
+    BuildTab()
+    if not panel then return end
+    pickedQuest = questID
+    KewkyQuestSV.infoOpen = true
+    if panel:IsShown() then Render() else panel:Show() end
 end
 
 local f = CreateFrame("Frame")
