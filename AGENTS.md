@@ -55,3 +55,17 @@ Per-character PvP note (`KewkyDeathNoteDB.chars[playerGUID].players[enemyGUID]` 
 - The meter's `unitName` meaning (target of your damage) and whether `PARTY_KILL` fires for solo kills
   are unconfirmed in game; `/kdn debug` prints both.
 - The target glow is its own frame anchored to `TargetFrame`; nothing is written into `TargetFrame`.
+
+## KewkyQuest
+
+Quest router, arrow, sparkle and Quest Info tab (GPLv3: QuestDB.lua is converted from Questie; ObjectiveDB.lua
+from wowforever-waypoint-tracker, MIT; notices in THIRD-PARTY-LICENSES.txt, which must ship in the zip).
+
+- Arrow target (`QuestTarget`): nearest still-open ObjectiveDB spot within 300 yd of the game's map marker
+  (`C_QuestLog.GetQuestsOnMap`, else `GetNextWaypoint`), else the marker, else the turn-in. Item rows count as done
+  when bags hold enough. `/kq why` prints the reasoning.
+- Sparkle.lua: soft-interact CVars (saved in `KewkyQuestSV.sparkleSaved`, restored by `/kq sparkle`), matches
+  `UnitName("softinteract")` against ObjectiveDB labels and the live log's item/object objectives.
+- QuestInfo.lua: own side tab (LargeSideTabButtonTemplate) on QuestMapFrame's right edge; never join Blizzard's
+  TabButtons/ContentFrames arrays (taint).
+- Data rebuild: wow-tracker `tools/kq_objectives_build.py` (writes ObjectiveDB.lua).

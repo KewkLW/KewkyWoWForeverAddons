@@ -1,0 +1,12 @@
+## Interface: 16001
+## Title: KewkyQuest
+## Notes: Quest routing, a navigation arrow that follows your quests, sparkles on quest objects and a quest info tab
+## Author: Kewk
+## Version: dev
+## SavedVariables: KewkyQuestSV
+## Category: Quests
+QuestDB.lua
+ObjectiveDB.lua
+KewkyQuest.lua
+Sparkle.lua
+QuestInfo.lua

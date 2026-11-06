@@ -26,6 +26,8 @@ jobs:
             [ "$toc" = "$addon/$addon.toc" ] || continue
             mkdir -p "build/$addon"
             cp "$addon"/*.toc "$addon"/*.lua "$addon"/README.md "build/$addon/"
+            # licence and third-party notices travel with the addon (KewkyQuest is GPLv3)
+            cp "$addon"/LICENSE* "$addon"/THIRD-PARTY-LICENSES.txt "build/$addon/" 2>/dev/null || true
             sed -i "s/^## Version: .*/## Version: $version/" "build/$addon"/*.toc
             (cd build && zip -qr "../dist/$addon.zip" "$addon")
           done
