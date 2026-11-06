@@ -435,6 +435,7 @@ local function BuildFrame()
     if ns.ToggleAlert then
         frame.alertBox = Check("Enemy alert", 10, ns.AlertOn, ns.ToggleAlert)
         frame.soundBox = Check("Alert sound", 120, ns.SoundOn, ns.ToggleSound)
+        if ns.ToggleShare then frame.shareBox = Check("Share sightings", 230, ns.ShareOn, ns.ToggleShare) end
     end
 
     frame.scroll = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
@@ -565,6 +566,8 @@ SlashCmdList.KEWKYDEATHNOTE = function(msg)
         if ns.ToggleAlert then ns.ToggleAlert() end
     elseif msg == "sound" then
         if ns.ToggleSound then ns.ToggleSound() end
+    elseif msg == "share" then
+        if ns.ToggleShare then ns.ToggleShare() end
     elseif msg == "reset yes" then
         db.players = {}
         RefreshUI()

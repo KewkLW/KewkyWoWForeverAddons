@@ -13,6 +13,11 @@ killed or helped kill, with their level and yours at the time.
   **Alert sound** is an option, off by default: a warning sound, and the loud raid-warning sound for Death Note players. The same player alerts again only after 2 minutes, and
   it stays quiet in battlegrounds and arenas. It turns on enemy nameplates (that's how nearby enemies
   become visible to addons, about 40-60 yards); `/kdn alert` turns it off and restores your settings.
+- **Shared sightings:** your sightings are shared with everyone running KewkyDeathNote in the same zone.
+  They get the same notice ("spotted by Kewk at 22:31") and a red pin on their world map where it was
+  seen, fading out over 1 minute (hover it for details). The same enemy reported by several people shows
+  once. It uses a hidden chat channel, and it sends your position when you spot someone, since the enemy
+  is within nameplate range of you. `/kdn share` or the "Share sightings" checkbox turns it off.
 - Kept per character.
 
 ## How it counts
@@ -30,7 +35,7 @@ Forever restricts the combat log for addons, so the addon uses what the game doe
 Levels come from the last time you saw the player; "??" means they were too high to show a level.
 
 - `/kdn debug` prints what the addon sees (kill events, death recap, damage meter) to chat.
-- `/kdn alert` turns the enemy alert on or off, `/kdn sound` its sound; both are also checkboxes in the `/kdn` window.
+- `/kdn alert` turns the enemy alert on or off, `/kdn sound` its sound, `/kdn share` sharing; all three are also checkboxes in the `/kdn` window.
 - `/kdn reset` clears the note for the current character.
 
 ## Install

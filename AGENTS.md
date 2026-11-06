@@ -70,3 +70,8 @@ from wowforever-waypoint-tracker, MIT; notices in THIRD-PARTY-LICENSES.txt, whic
 - QuestInfo.lua: own side tab (LargeSideTabButtonTemplate) on QuestMapFrame's right edge; never join Blizzard's
   TabButtons/ContentFrames arrays (taint).
 - Data rebuild: wow-tracker `tools/kq_objectives_build.py` (writes ObjectiveDB.lua).
+- Share.lua: sightings go out on hidden channel "KewkyDeathNote" (prefix KewkyDN1, "~"-separated: S, mapID, x*1e4, y*1e4,
+  epoch, guid, faction, level, classFile, race, name). Sending can hit AddOnMessageLockdown in combat, so it queues and
+  retries on PLAYER_REGEN_ENABLED. Receivers accept only their own zone (map walked up to Zone type), dedupe per GUID for
+  60 s, and draw pins as their own frames on WorldMapFrame.ScrollContainer.Child (projected through world coords),
+  fading over 60 s. Mock: /tmp/kcttest/share.lua (send, then recv with the payload).

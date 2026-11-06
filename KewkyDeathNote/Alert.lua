@@ -131,6 +131,11 @@ local function Check(unit)
     if Readable(classLocal) and classLocal ~= "" then parts[#parts + 1] = classLocal end
     local what = table.concat(parts, " ")
 
+    if ns.ShareSighting then
+        ns.ShareSighting({ guid = guid, name = name, what = what, faction = faction, level = level,
+            class = Readable(class) and class or nil, race = Readable(race) and race or nil })
+    end
+
     local note = NoteEntry(guid)
     if note then
         local k, d = #note.kills, #note.deaths
@@ -161,6 +166,24 @@ f:SetScript("OnEvent", function(_, event, unit)
         Check("mouseover")
     end
 end)
+
+-- a sighting another player's addon shared (Share.lua): same banner, with who saw them and when
+ns.ShowSighting = function(guid, name, what, faction, by, t, map, x, y)
+    if not Enabled() or InBattle() then return end
+    lastAlert[guid] = GetTime()        -- don't alert again when you see them yourself right after
+    local when = date("%H:%M", t)
+    local where = string.format("%.0f, %.0f", x, y)
+    local note = NoteEntry(guid)
+    if note then
+        Show("DEATH NOTE: " .. name, string.format("%s  ·  seen by %s at %s (%s)", what, by, when, where), 1, 0.15, 0.15)
+        Sound("RAID_WARNING")
+    else
+        Show(faction .. " spotted: " .. name, string.format("%s  ·  seen by %s at %s (%s)", what, by, when, where), 1, 0.55, 0.1)
+        Sound("UI_RAID_BOSS_WHISPER_WARNING")
+    end
+    DEFAULT_CHAT_FRAME:AddMessage(string.format("|cffcc3333Death Note|r %s %s (%s) spotted by %s at %s, near %s; pin on your map for 1 min.",
+        faction, name, what, by, when, where))
+end
 
 -- options, for KewkyDeathNote's /kdn command and window checkboxes
 ns.AlertOn, ns.SoundOn = Enabled, SoundOn

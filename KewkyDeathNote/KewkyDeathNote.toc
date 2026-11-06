@@ -7,3 +7,4 @@
 ## Category: PvP
 KewkyDeathNote.lua
 Alert.lua
+Share.lua
