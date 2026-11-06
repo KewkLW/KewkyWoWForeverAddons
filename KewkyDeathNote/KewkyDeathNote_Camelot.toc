@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: KewkyDeathNote
+## Notes: Every player who killed you and every player you killed or helped kill, with both levels, and the K/D on your target
+## Author: Kewk
+## Version: dev
+## SavedVariables: KewkyDeathNoteDB
+## Category: PvP
+KewkyDeathNote.lua

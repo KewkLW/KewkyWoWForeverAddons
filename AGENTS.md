@@ -42,3 +42,16 @@ right-click menu on chat names.
 - Forever names are first name + unique surname, and the surname sits where a realm normally would
   (`Name-Surname`). The macro tries both `Name-Surname` and `Name Surname`.
 
+## KewkyDeathNote
+
+Per-character PvP note (`KewkyDeathNoteDB.chars[playerGUID].players[enemyGUID]` with `kills`, `assists`,
+`deaths` lists of `{t, theirs, mine, zone, via}`).
+
+- `COMBAT_LOG_EVENT_UNFILTERED` is restricted, so: kills from `PARTY_KILL` (readable when the victim is a
+  player); assists from `PARTY_KILL` by a group member, confirmed on `PLAYER_REGEN_ENABLED` by scanning
+  `C_DamageMeter` DamageDone for your GUID (`combatSpells[].combatSpellDetails.unitName`), which is
+  `SecretWhenInCombat`; deaths from `C_DeathRecap.GetRecapEvents()` (`causedDeath` event's `sourceName`,
+  no GUID or level), matched by name to players cached from target/mouseover/nameplates.
+- The meter's `unitName` meaning (target of your damage) and whether `PARTY_KILL` fires for solo kills
+  are unconfirmed in game; `/kdn debug` prints both.
+- The target glow is its own frame anchored to `TargetFrame`; nothing is written into `TargetFrame`.

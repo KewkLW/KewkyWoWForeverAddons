@@ -4,6 +4,7 @@ Small addons for World of Warcraft: Forever.
 
 | Addon | What it does | Download |
 |---|---|---|
+| [KewkyDeathNote](KewkyDeathNote) | Every player who killed you and every player you killed or helped kill, with both levels; red glow and K/D on your target | [KewkyDeathNote.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyDeathNote.zip) |
 | [KewkyFriends](KewkyFriends) | Shows each Battle.net friend's ruleset and faction, and whether you can group with them | [KewkyFriends.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyFriends.zip) |
 | [KewkyChatTarget](KewkyChatTarget) | Adds Target to the right-click menu on player names in chat | [KewkyChatTarget.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyChatTarget.zip) |
 
