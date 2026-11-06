@@ -16,6 +16,7 @@ tracked quest, a sparkle on quest objects, and a Quest Info tab on the Map & Que
 - **Sparkle:** when the game soft-targets an interactable object that one of your quests needs (box parts,
   branches, chests), a gold sparkle plays on it. This turns on the game's soft-interact targeting
   (nearest object around you, 20 yd); `/kq sparkle` turns it off and restores your settings.
+- `/kq way [zone] x y [name]` puts a pin on the map and points the arrow at it (`/kq way Orgrimmar 81.5 19.6 Hanashi`).
 - `/kq why` explains where the arrow is pointing and why; `/kq done` lists completed quests.
 
 The quest data is the Classic quest database, and Forever has changed and added quests, so some NPCs

@@ -1435,7 +1435,8 @@ end)
 SLASH_KEWKYQUEST1 = "/kq"
 SLASH_KEWKYQUEST2 = "/kewkyquest"
 SlashCmdList["KEWKYQUEST"] = function(msg)
-    msg = strtrim(msg):lower()
+    local raw = strtrim(msg)
+    msg = raw:lower()
 
     if msg == "route" then
         filteredQuests = ScanWithAdjacent()
@@ -1450,6 +1451,29 @@ SlashCmdList["KEWKYQUEST"] = function(msg)
     elseif msg == "arrow" or msg == "clear" then
         followRoute, followIdx = nil, nil
         ClearArrow()
+
+    elseif msg:match("^way") then
+        -- /kq way [zone] x y [name]: map pin plus the arrow, e.g. /kq way Orgrimmar 81.5 19.6 Hanashi
+        local rest = raw:sub(4)
+        local zoneText, x, y, name = rest:match("^%s*(.-)%s*([%d%.]+)[%s,]+([%d%.]+)%s*(.*)$")
+        x, y = tonumber(x), tonumber(y)
+        if not (x and y) then
+            print("|cff55ccffKewkyQuest|r: /kq way [zone] x y [name], e.g. /kq way Orgrimmar 81.5 19.6 Hanashi")
+            return
+        end
+        local zone
+        if zoneText and zoneText ~= "" then
+            local want = zoneText:lower()
+            for id, zname in pairs(ns.ZoneNames) do
+                if zname:lower() == want then zone = id break end
+            end
+            if not zone then print("|cff55ccffKewkyQuest|r: no zone called " .. zoneText) return end
+        else
+            zone = AreaFor(PlayerMapID())
+        end
+        local label = (name ~= "" and name or "Waypoint") .. " (" .. ZoneName(zone) .. " " .. x .. ", " .. y .. ")"
+        followRoute, followIdx = nil, nil
+        SetArrow({ name = label, zone = zone, x = x, y = y }, label)
 
     elseif msg == "why" then
         ExplainTarget()
