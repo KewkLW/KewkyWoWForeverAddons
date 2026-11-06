@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: KewkyCamPortrait
+## Notes: Hides your character portrait on the player frame so a webcam can sit in the ring
+## SavedVariables: KewkyCamPortraitDB
+## Author: Kewk
+## Version: dev
+## Category: Unit Frames
+KewkyCamPortrait.lua

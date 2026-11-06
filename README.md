@@ -9,6 +9,7 @@ Small addons for World of Warcraft: Forever.
 | [KewkyConsole](KewkyConsole) | Run Lua in game and see the output: `/kc`, a console window, a buffer for long code | [KewkyConsole.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyConsole.zip) |
 | [KewkyFriends](KewkyFriends) | Shows each Battle.net friend's ruleset and faction, and whether you can group with them | [KewkyFriends.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyFriends.zip) |
 | [KewkyChatTarget](KewkyChatTarget) | Adds Target to the right-click menu on player names in chat | [KewkyChatTarget.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyChatTarget.zip) |
+| [KewkyCamPortrait](KewkyCamPortrait) | Hides your character portrait on the player frame so a stream webcam can sit in the ring | [KewkyCamPortrait.zip](https://github.com/KewkLW/KewkyWoWForeverAddons/releases/latest/download/KewkyCamPortrait.zip) |
 
 ![KewkyQuest's Quest Info tab and arrow in game](docs/kewkyquest.jpg)
 
