@@ -1,0 +1,37 @@
+name: Release
+
+# Push a tag like v0.2.0 to publish. Every release carries all the zips, so each
+# releases/latest/download/<name>.zip link keeps working:
+#   KewkyWoWForeverAddons.zip  every addon folder, ready to extract into Interface/AddOns
+#   <Addon>.zip                one addon folder
+# The tag's version is written into each TOC's "## Version:" line.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build zips
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p build dist
+          for toc in */*.toc; do
+            addon="$(dirname "$toc")"
+            [ "$toc" = "$addon/$addon.toc" ] || continue
+            mkdir -p "build/$addon"
+            cp "$addon"/*.toc "$addon"/*.lua "$addon"/README.md "build/$addon/"
+            sed -i "s/^## Version: .*/## Version: $version/" "build/$addon"/*.toc
+            (cd build && zip -qr "../dist/$addon.zip" "$addon")
+          done
+          (cd build && zip -qr "../dist/KewkyWoWForeverAddons.zip" .)
+          ls -l dist
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/*.zip --title "Kewky WoW Forever Addons $GITHUB_REF_NAME" --generate-notes

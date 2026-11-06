@@ -1,0 +1,8 @@
+## Interface: 16001
+## Title: KewkyChatTarget
+## Notes: Adds Target to the right-click menu on player names in chat
+## SavedVariables: KewkyChatTargetDB
+## Author: Kewk
+## Version: dev
+## Category: Chat
+KewkyChatTarget.lua

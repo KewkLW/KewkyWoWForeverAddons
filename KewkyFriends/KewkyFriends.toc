@@ -1,0 +1,7 @@
+## Interface: 16001
+## Title: KewkyFriends
+## Notes: Shows each Battle.net friend's ruleset and faction, and whether you can group
+## Author: Kewk
+## Version: dev
+## Category: Social
+KewkyFriends.lua
