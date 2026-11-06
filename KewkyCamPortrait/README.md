@@ -4,6 +4,7 @@ WoW Forever addon for streaming: makes your character portrait on the player fra
 webcam (in OBS, with a circle mask) can sit inside the portrait ring. The ring, name, bars and level
 badge stay.
 
+- Minimap button: left-click toggles the portrait, right-click toggles the magenta key fill, drag to move it.
 - `/kcp` toggles the portrait (hidden by default once installed).
 - `/kcp level` toggles the level badge at the bottom of the ring, if it covers the cam.
 - `/kcp key` fills the empty circle with solid magenta so the cam can sit behind the ring (see below).

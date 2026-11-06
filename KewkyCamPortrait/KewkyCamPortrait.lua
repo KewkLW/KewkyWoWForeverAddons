@@ -70,6 +70,65 @@ local function Where()
         left + 0.5, top + 0.5, size + 0.5, size + 0.5, physW, physH))
 end
 
+local function OnOff(v) return v and "|cff20ff20on|r" or "|cff888888off|r" end
+
+-- Minimap button: left-click portrait, right-click key fill, drag around the minimap edge.
+local mmButton
+local function PlaceButton()
+    local rad = math.rad(db.minimapAngle or 200)
+    local r = Minimap:GetWidth() / 2 + 5
+    mmButton:ClearAllPoints()
+    mmButton:SetPoint("CENTER", Minimap, "CENTER", math.cos(rad) * r, math.sin(rad) * r)
+end
+
+local function ShowTooltip(self)
+    GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+    GameTooltip:SetText("KewkyCamPortrait", 1, 0.82, 0)
+    GameTooltip:AddLine("Left-click: hide portrait (" .. OnOff(db.hidePortrait) .. ")", 0.8, 0.8, 0.8)
+    GameTooltip:AddLine("Right-click: magenta key fill (" .. OnOff(db.keyFill) .. ")", 0.8, 0.8, 0.8)
+    GameTooltip:AddLine("Drag: move", 0.5, 0.5, 0.5)
+    GameTooltip:Show()
+end
+
+local function CreateMinimapButton()
+    mmButton = CreateFrame("Button", "KewkyCamPortraitMinimapButton", Minimap)
+    mmButton:SetSize(32, 32)
+    mmButton:SetFrameStrata("MEDIUM")
+    mmButton:SetFrameLevel(8)
+    mmButton:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    mmButton:RegisterForDrag("LeftButton")
+    mmButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight")
+
+    local icon = mmButton:CreateTexture(nil, "BACKGROUND")
+    icon:SetSize(20, 20)
+    icon:SetPoint("TOPLEFT", 7, -5)
+    icon:SetTexture("Interface\\Icons\\INV_Misc_Spyglass_02")
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+
+    local border = mmButton:CreateTexture(nil, "OVERLAY")
+    border:SetSize(52, 52)
+    border:SetPoint("TOPLEFT")
+    border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+
+    mmButton:SetScript("OnDragStart", function(self)
+        self:SetScript("OnUpdate", function()
+            local mx, my = Minimap:GetCenter()
+            local cx, cy = GetCursorPosition()
+            local scale = Minimap:GetEffectiveScale()
+            db.minimapAngle = math.deg(math.atan2(cy / scale - my, cx / scale - mx))
+            PlaceButton()
+        end)
+    end)
+    mmButton:SetScript("OnDragStop", function(self) self:SetScript("OnUpdate", nil) end)
+    mmButton:SetScript("OnClick", function(self, btn)
+        SlashCmdList.KEWKYCAMPORTRAIT(btn == "RightButton" and "key" or "toggle")
+        if GameTooltip:IsOwned(self) then ShowTooltip(self) end
+    end)
+    mmButton:SetScript("OnEnter", ShowTooltip)
+    mmButton:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    PlaceButton()
+end
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -81,6 +140,7 @@ f:SetScript("OnEvent", function(_, event, arg)
         if db.hidePortrait == nil then db.hidePortrait = true end
         if db.hideLevel == nil then db.hideLevel = false end
         if db.keyFill == nil then db.keyFill = false end
+        CreateMinimapButton()
         return
     end
     if not db then return end
